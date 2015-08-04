@@ -217,7 +217,6 @@ void unlock_policy_rwsem_write(int cpu);
 
 #define CPUFREQ_RELATION_L 0  /* lowest frequency at or above target */
 #define CPUFREQ_RELATION_H 1  /* highest frequency below or at target */
-#define CPUFREQ_RELATION_C 2  /* closest frequency to target */
 
 struct freq_attr;
 
@@ -354,19 +353,13 @@ enum {
 	BOOT_CPU = 0,
 #if defined(CONFIG_SEC_MILLET_PROJECT) || defined(CONFIG_SEC_MATISSE_PROJECT) || defined(CONFIG_SEC_VICTOR_PROJECT) \
 	|| defined(CONFIG_SEC_BERLUTI_PROJECT)|| defined(CONFIG_SEC_FRESCONEO_PROJECT) || defined(CONFIG_SEC_AFYON_PROJECT) \
-	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT) || defined(CONFIG_SEC_DEGAS_PROJECT) \
-	|| defined(CONFIG_SEC_HESTIA_PROJECT) || defined(CONFIG_SEC_MEGA2_PROJECT) || defined(CONFIG_SEC_GNOTE_PROJECT) \
-	|| defined(CONFIG_SEC_T10_PROJECT) || defined(CONFIG_SEC_T8_PROJECT) || defined(CONFIG_SEC_VASTA_PROJECT) || defined(CONFIG_SEC_VICTOR3GDSDTV_PROJECT) \
-	|| defined(CONFIG_SEC_RUBENS_PROJECT) || defined(CONFIG_SEC_VASTALTE_CHN_CMMCC_DUOS_PROJECT)
+	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT)
 	NON_BOOT_CPU,
 #endif
 };
 #if defined(CONFIG_SEC_MILLET_PROJECT) || defined(CONFIG_SEC_MATISSE_PROJECT) || defined(CONFIG_SEC_VICTOR_PROJECT) \
 	|| defined(CONFIG_SEC_BERLUTI_PROJECT)|| defined(CONFIG_SEC_FRESCONEO_PROJECT) || defined(CONFIG_SEC_AFYON_PROJECT) \
-	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT) || defined(CONFIG_SEC_DEGAS_PROJECT) \
-	|| defined(CONFIG_SEC_HESTIA_PROJECT) || defined(CONFIG_SEC_MEGA2_PROJECT) || defined(CONFIG_SEC_GNOTE_PROJECT) \
-	|| defined(CONFIG_SEC_T10_PROJECT) || defined(CONFIG_SEC_T8_PROJECT) || defined(CONFIG_SEC_VASTA_PROJECT) || defined(CONFIG_SEC_VICTOR3GDSDTV_PROJECT) \
-	|| defined(CONFIG_SEC_MS01_PROJECT) || defined(CONFIG_SEC_RUBENS_PROJECT) || defined(CONFIG_SEC_VASTALTE_CHN_CMMCC_DUOS_PROJECT)
+	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT)
 
 int get_max_freq(void);
 int get_min_freq(void);
@@ -375,28 +368,15 @@ int get_min_freq(void);
 #define MIN_FREQ_LIMIT		get_min_freq() /* 384000 */
 #define MIN_TOUCH_LIMIT_SECOND 787200
 #define MIN_TOUCH_LIMIT		998400
-#define MIN_TOUCH_LIMIT_SECOND_9LEVEL	MIN_TOUCH_LIMIT
 #define MAX_UNICPU_LIMIT	1190400
-#define MIN_SENSOR_LIMIT	1497600
-#if defined(CONFIG_SEC_GNOTE_PROJECT) || defined(CONFIG_SEC_HESTIA_PROJECT) || defined(CONFIG_SEC_RUBENS_PROJECT)
-#define MIN_TOUCH_LOW_LIMIT	1497600
-#define MIN_TOUCH_HIGH_LIMIT	2457600
-#endif
 
 #define UPDATE_NOW_BITS		0xFF
 #else
 #define MIN_TOUCH_LOW_LIMIT	1497600
-#if defined(CONFIG_SEC_S_PROJECT)
-#define MIN_TOUCH_LIMIT			1190400
-#define MIN_TOUCH_LIMIT_SECOND		883200
-#define MIN_TOUCH_LIMIT_SECOND_9LEVEL	1728000
-#else
 #define MIN_TOUCH_LIMIT		1728000
-#define MIN_TOUCH_LIMIT_SECOND		1190400
-#define MIN_TOUCH_LIMIT_SECOND_9LEVEL	MIN_TOUCH_LIMIT
-#endif
 #define MIN_TOUCH_HIGH_LIMIT	2457600
 #define MIN_CAMERA_LIMIT    998400
+#define MIN_TOUCH_LIMIT_SECOND	1190400
 #endif
 enum {
 	DVFS_NO_ID			= 0,
@@ -408,7 +388,6 @@ enum {
 	DVFS_UNICPU_ID			= 0x00000008,
 	DVFS_LTETP_ID			= 0x00000010,
 	DVFS_CAMERA_ID		= 0x00000012,
-	DVFS_SENSOR_ID		= 0x00000020,
 
 	/* DO NOT UPDATE NOW */
 	DVFS_THERMALD_ID		= 0x00000100,
@@ -420,10 +399,7 @@ enum {
 int set_freq_limit(unsigned long id, unsigned int freq);
 #if defined(CONFIG_SEC_MILLET_PROJECT) || defined(CONFIG_SEC_MATISSE_PROJECT) || defined(CONFIG_SEC_VICTOR_PROJECT) \
 	|| defined(CONFIG_SEC_BERLUTI_PROJECT)|| defined(CONFIG_SEC_FRESCONEO_PROJECT) || defined(CONFIG_SEC_AFYON_PROJECT) \
-	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT) || defined(CONFIG_SEC_DEGAS_PROJECT) \
-	|| defined(CONFIG_SEC_HESTIA_PROJECT) || defined(CONFIG_SEC_MEGA2_PROJECT) ||  defined(CONFIG_SEC_GNOTE_PROJECT) \
-	|| defined(CONFIG_SEC_T10_PROJECT) || defined(CONFIG_SEC_T8_PROJECT) || defined(CONFIG_SEC_VASTA_PROJECT) || defined(CONFIG_SEC_VICTOR3GDSDTV_PROJECT) \
-	|| defined(CONFIG_SEC_MS01_PROJECT) || defined(CONFIG_SEC_RUBENS_PROJECT)  || defined(CONFIG_SEC_VASTALTE_CHN_CMMCC_DUOS_PROJECT)
+	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT)
 unsigned int get_min_lock(void);
 unsigned int get_max_lock(void);
 void set_min_lock(int freq);
@@ -455,40 +431,50 @@ extern struct cpufreq_governor cpufreq_gov_userspace;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND)
 extern struct cpufreq_governor cpufreq_gov_ondemand;
 #define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_ondemand)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SLIM)
+extern struct cpufreq_governor cpufreq_gov_slim;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_slim)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE)
 extern struct cpufreq_governor cpufreq_gov_conservative;
 #define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_conservative)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE)
-extern struct cpufreq_governor cpufreq_gov_interactive;
-#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_interactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIMM)
-extern struct cpufreq_governor cpufreq_gov_intellimm;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_intellimm)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ZZMOOVE)
 extern struct cpufreq_governor cpufreq_gov_zzmoove;
 #define CPUFREQ_DEFAULT_GOVERNOR       (&cpufreq_gov_zzmoove)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE)
+extern struct cpufreq_governor cpufreq_gov_interactive;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_interactive)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIDEMAND)
+extern struct cpufreq_governor cpufreq_gov_intellidemand;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_intellidemand)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE)
+extern struct cpufreq_governor cpufreq_gov_intelliactive;
+#define CPUFREQ_DEFAULT_GOVERNOR    (&cpufreq_gov_intelliactive)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_WHEATLEY)
+extern struct cpufreq_governor cpufreq_gov_wheatley;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_wheatley)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX)
 extern struct cpufreq_governor cpufreq_gov_smartmax;
 #define CPUFREQ_DEFAULT_GOVERNOR        (&cpufreq_gov_smartmax)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS)
+extern struct cpufreq_governor cpufreq_gov_smartmax_eüs;
+#define CPUFREQ_DEFAULT_GOVERNOR        (&cpufreq_gov_smartmax_eps)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIMM)
+extern struct cpufreq_governor cpufreq_gov_intellimm;
+#define CPUFREQ_DEFAULT_GOVERNOR        (&cpufreq_gov_intellimm)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIONHEART)
+extern struct cpufreq_governor cpufreq_gov_lionheart;
+#define CPUFREQ_DEFAULT_GOVERNOR 	(&cpufreq_gov_LIONHEART)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_NIGHTMARE)
+extern struct cpufreq_governor cpufreq_gov_nightmare;
+#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_nightmare)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_PEGASUSQ)
+extern struct cpufreq_governor cpufreq_gov_pegasusq;
+#define CPUFREQ_DEFAULT_GOVERNOR  (&cpufreq_gov_pegasusq)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_IMPULSE)
 extern struct cpufreq_governor cpufreq_gov_impulse;
 #define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_impulse)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS)
-extern struct cpufreq_governor cpufreq_gov_ondemandplus;
-#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_ondemandplus)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_YANKACTIVE)
-extern struct cpufreq_governor cpufreq_gov_yankactive;
-#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_yankactive)
->>>>>>> f4e7d64... cpufreq: Add yankactive governor
-=======
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS)
-extern struct cpufreq_governor cpufreq_gov_ondemandplus;
-#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_ondemandplus)
->>>>>>> 0265a0c... cpufreq: Add ondemandplus governor
 #endif
+
 
 /*********************************************************************
  *                     FREQUENCY TABLE HELPERS                       *
