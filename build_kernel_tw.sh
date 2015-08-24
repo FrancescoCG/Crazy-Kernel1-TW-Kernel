@@ -42,7 +42,7 @@ find $RAMFS_TMP -name EMPTY_DIRECTORY -exec rm -rf {} \;
 #remove mercurial repository
 rm -rf $RAMFS_TMP/.hg
 #copy modules into ramfs
-mkdir -p /home/francesco/Crazy-Kernel/G900F_CrazyKernel1_TW.CWM/system/lib/modules
+mkdir -p /home/francesco/Crazy-Kernel-TW/G900F_CrazyKernel1_TW.CWM/system/lib/modules
 rm -rf /home/francesco/Crazy-Kernel-TW/G900F_CrazyKernel1_TW.CWM/system/lib/modules/*
 find -name '*.ko' -exec cp -av {} /home/francesco/Crazy-Kernel-TW/G900F_CrazyKernel1_TW.CWM/system/lib/modules/ \;
 ${CROSS_COMPILE}strip --strip-unneeded /home/francesco/Crazy-Kernel-TW/G900F_CrazyKernel1_TW.CWM/system/lib/modules/*
