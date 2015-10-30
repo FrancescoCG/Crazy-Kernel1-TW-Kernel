@@ -3,15 +3,15 @@ export KERNELDIR=`readlink -f .`
 export RAMFS_SOURCE="/home/francesco/Crazy-Kernel-TW/Kernel_tw/Ramdisks/ramfs_tw"
 export PARENT_DIR=`readlink -f ..`
 export USE_SEC_FIPS_MODE=true
-export CROSS_COMPILE=/home/francesco/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-2015.06/bin/arm-cortex_a15-linux-gnueabihf-
+export CROSS_COMPILE=/home/francesco/arm-eabi-6.0/bin/arm-eabi-
 
-# if [ "v5" != "" ];then
-#  export KERNELDIR=`readlink -f v5`
+# if [ "v7" != "" ];then
+#  export KERNELDIR=`readlink -f v7`
 # fi
 
 RAMFS_TMP="/home/francesco/Crazy-Kernel-TW/Kernel_tw/tmp_tw/ramfs"
 
-VER="\"-CrazyKernel1_TW-v5\""
+VER="\"-CrazyKernel1_TW-v7\""
 cp -f /home/francesco/Crazy-Kernel-TW/Kernel_tw/arch/arm/configs/0crazykernel1_TW_defconfig /home/francesco/Crazy-Kernel-TW/0crazykernel1_TW_defconfig
 sed "s#^CONFIG_LOCALVERSION=.*#CONFIG_LOCALVERSION=$VER#" /home/francesco/Crazy-Kernel-TW/0crazykernel1_TW_defconfig > /home/francesco/Crazy-Kernel-TW/Kernel_tw/arch/arm/configs/0crazykernel1_TW_defconfig
 
@@ -60,11 +60,11 @@ tools/mkbootimg --cmdline 'console=null androidboot.hardware=qcom user_debug=23 
 cd /home/francesco/Crazy-Kernel-TW
 mv -f -v /home/francesco/Crazy-Kernel-TW/Kernel_tw/boot.img /home/francesco/Crazy-Kernel-TW/G900F_CrazyKernel1_TW.CWM/boot.img
 cd /home/francesco/Crazy-Kernel-TW/G900F_CrazyKernel1_TW.CWM
-zip -r ../CrazyKernel1_TW-Kernel_v5_CWM.zip .
+zip -r ../CrazyKernel1_TW-Kernel_v7_CWM.zip .
 
-adb push /home/francesco/Crazy-Kernel-TW/CrazyKernel1_TW-Kernel_v5_CWM.zip /storage/sdcard1/CrazyKernel1_TW-Kernel_${1}_CWM.zip
+adb push /home/francesco/Crazy-Kernel-TW/CrazyKernel1_TW-Kernel_v7_CWM.zip /storage/sdcard1/CrazyKernel1_TW-Kernel_${1}_CWM.zip
 
-# adb push /home/francesco/Crazy-Kernel-TW/CrazyKernel1_TW-Kernel_v5_CWM.zip /storage/sdcard1/update-crazykernel1.zip
+# adb push /home/francesco/Crazy-Kernel-TW/CrazyKernel1_TW-Kernel_v7_CWM.zip /storage/sdcard1/update-crazykernel1.zip
 # 
 # adb shell su -c "echo 'boot-recovery ' > /cache/recovery/command"
 # adb shell su -c "echo '--update_package=/storage/sdcard0/update-crazykernel1.zip' >> /cache/recovery/command"
